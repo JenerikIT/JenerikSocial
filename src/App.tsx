@@ -10,6 +10,7 @@ import FullPostEdit from "./components/sections/PostList/FullPostEdit";
 function App() {
   const navigate = useNavigate();
   const { data: userData, isLoading, isError } = useAuthMeQuery();
+  console.log(userData);
   useEffect(() => {
     if (isLoading) return;
 

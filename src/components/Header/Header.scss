@@ -1,0 +1,232 @@
+.header {
+  padding-top: 20px;
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    .searchUser {
+      padding: 7px 14px;
+      border-radius: 7px;
+      background-color: #1a1a2e79;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 20vw;
+      svg {
+        cursor: pointer;
+      }
+      input {
+        outline: none;
+        border: none;
+        color: white;
+        font-size: 15px;
+        width: 100%;
+      }
+      svg {
+        width: 16px;
+      }
+    }
+  }
+  &__menu {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    display: none;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background-color: #8488ff0b;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: rgba(205, 205, 205, 0.03);
+    transition: background 0.3s ease-in-out;
+    span {
+      font-size: 16px;
+      font-weight: 600;
+      font-family: "Raleway";
+      color: rgba(255, 255, 255, 0.71);
+      transition: color 0.3s ease-in-out;
+    }
+    &:hover {
+      background: rgba(132, 136, 255, 0.03);
+      span {
+        color: white;
+      }
+    }
+    @media (max-width: 1710px) {
+      svg {
+        width: 17px;
+        height: 17px;
+      }
+      span {
+        font-size: 15px;
+      }
+    }
+
+    &.active {
+      span {
+        color: white;
+      }
+      svg {
+        path {
+          stroke: #8488ff;
+        }
+      }
+
+      background: rgba(132, 136, 255, 0.03);
+    }
+  }
+  &__user-top {
+    display: flex;
+    align-items: center;
+    .group-svg {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-right: 21px;
+
+      svg {
+        cursor: pointer;
+      }
+      @media (max-width: 1710px) {
+        .iconHeader {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+
+  &__userLogo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    img {
+      width: 45px;
+      height: 45px;
+      @media (max-width: 1710px) {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      font-family: "Montserrat";
+      .user-name {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 25px;
+        color: white;
+      }
+      .description {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        .circle {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background-color: #f05c00;
+        }
+        p {
+          color: #8c8c92;
+          font-size: 12px;
+        }
+      }
+    }
+    .account-menu {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 250px;
+      padding: 15px;
+      background-color: rgba(28, 25, 37, 0.975);
+      border: 0.5px solid rgba(200, 128, 255, 0.14);
+      border-radius: 20px;
+      color: white;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(200, 128, 255, 0.1);
+      opacity: 0;
+      transform: translateY(-10px);
+      visibility: hidden;
+      transition: opacity 0.3s ease-out,
+        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1),
+        visibility 0.3s linear;
+      z-index: -1;
+      user-select: none;
+
+      &.active {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+        z-index: 1000;
+      }
+
+      &__top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      &__logo {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        user-select: none;
+      }
+
+      &__header {
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      &__phone {
+        font-size: 14px;
+        color: #8c8c92;
+      }
+
+      &__options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 10px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      &__option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: transform 0.2s ease, color 0.2s ease;
+
+        &:hover {
+          transform: translateX(3px);
+          color: #c880ff;
+        }
+
+        p {
+          border-bottom: 1px dashed #a06eff;
+          color: #a06eff;
+        }
+      }
+    }
+  }
+}

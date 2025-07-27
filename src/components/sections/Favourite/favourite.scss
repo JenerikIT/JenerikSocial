@@ -1,0 +1,31 @@
+.container-favourite {
+  .favourite {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    &__groups {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      .Empty-favourite {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        justify-content: center;
+        height: 200px;
+        color: white;
+        font-size: 20px;
+        font-weight: 500;
+        svg {
+          path {
+            transition: all 0.3s ease-in-out;
+            &:hover {
+              fill: rgb(132, 136, 255);
+            }
+          }
+        }
+      }
+    }
+  }
+}

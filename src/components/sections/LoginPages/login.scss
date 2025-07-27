@@ -1,0 +1,288 @@
+.Login {
+  font-family: "Nunito Sans", sans-serif;
+  color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  user-select: none;
+  background-color: #0a0a12;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M30,50 Q50,30 70,50 T90,50" fill="none" stroke="%239d7cff" stroke-width="0.3" opacity="0.1"/></svg>');
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  &__container {
+    background: rgba(24, 24, 36, 0.9);
+    padding: 40px 50px;
+    border-radius: 16px;
+    min-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(157, 124, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(157, 124, 255, 0.1);
+    z-index: 1;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 8px 40px rgba(109, 69, 226, 0.2),
+        0 0 0 1px rgba(157, 124, 255, 0.2);
+    }
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.4;
+    margin-bottom: 40px;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(157, 124, 255, 0.3);
+    letter-spacing: 1px;
+    color: #fff;
+  }
+
+  &__group-input {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  &__input {
+    background: rgba(36, 36, 56, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    padding-right: 15px;
+    border: 1px solid rgba(157, 124, 255, 0.3);
+    transition: all 0.3s ease;
+
+    &:focus-within {
+      border-color: #9d7cff;
+      box-shadow: 0 0 0 2px rgba(157, 124, 255, 0.2);
+    }
+
+    input {
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #fff;
+      padding: 12px 0 12px 15px;
+      width: 100%;
+      outline: none;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    &--password input {
+      padding-right: 15px;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    color: rgba(157, 124, 255, 0.7);
+  }
+
+  &__button {
+    background: linear-gradient(135deg, #6e45e2 0%, #9d7cff 100%);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #9d7cff 0%, #6e45e2 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    &:hover {
+      box-shadow: 0 0 15px rgba(157, 124, 255, 0.4);
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  &__options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+
+  &__remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    label {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.4;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      appearance: none;
+      background: rgba(36, 36, 56, 0.7);
+      border: 1px solid rgba(157, 124, 255, 0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+
+      &:checked {
+        background: #9d7cff;
+
+        &::after {
+          content: "✓";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #121212;
+          font-size: 10px;
+          font-weight: bold;
+        }
+      }
+
+      &:hover {
+        border-color: #9d7cff;
+      }
+    }
+  }
+
+  &__forgot {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #9d7cff;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #6e45e2;
+      text-decoration: underline;
+    }
+  }
+
+  &__divider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.3);
+
+    &-line {
+      flex-grow: 1;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(157, 124, 255, 0.3) 50%,
+        transparent 100%
+      );
+    }
+
+    &-text {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.4;
+      padding: 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  &__social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  &__social-button {
+    background: rgba(36, 36, 56, 0.7);
+    border: 1px solid rgba(157, 124, 255, 0.3);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+
+    &:hover {
+      background: rgba(157, 124, 255, 0.1);
+      border-color: #9d7cff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(157, 124, 255, 0.2);
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__link {
+    color: #9d7cff;
+    text-decoration: none;
+    margin-left: 5px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #6e45e2;
+      text-decoration: underline;
+    }
+  }
+}

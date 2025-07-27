@@ -1,0 +1,229 @@
+.music-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #0000000c;
+	backdrop-filter: blur(10px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	visibility: hidden;
+	opacity: 0;
+	z-index: -1;
+
+	transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out,
+		z-index 0.3s ease-in-out;
+
+	&.hide {
+		opacity: 1;
+		visibility: visible;
+		z-index: 1000;
+	}
+
+	&__wrapper {
+		padding: 20px;
+		background-color: #16172a;
+		border-radius: 20px;
+		width: 35%;
+		color: #fff;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		align-items: flex-end;
+
+		> small {
+			font-weight: 500;
+			font-size: 12px;
+			line-height: 15px;
+			color: rgba(255, 255, 255, 0.5);
+		}
+
+		.playlist {
+			display: flex;
+			flex-direction: column;
+			gap: 30px;
+			width: 100%;
+			margin-top: 20px;
+
+			.playlist-item {
+				display: grid;
+				grid-template-columns: 120px 1fr;
+				gap: 20px;
+				width: 100%;
+				align-items: center;
+
+				&__img {
+					width: 120px;
+					aspect-ratio: 1/1;
+					border-radius: 10px;
+					background-color: red;
+				}
+				&__info {
+					display: flex;
+					flex-direction: column;
+					width: 100%;
+
+					h3 {
+						font-weight: 600;
+						font-size: 18px;
+						line-height: 22px;
+						color: #ffffff;
+						margin-bottom: 3px;
+					}
+
+					> span {
+						font-weight: 600;
+						font-size: 14px;
+						line-height: 22px;
+						color: rgba(255, 255, 255, 0.5);
+					}
+
+					&__action {
+						display: flex;
+						align-items: center;
+						gap: 10px;
+
+						button {
+							padding: 8px;
+							background-color: #242438;
+							border-radius: 5px;
+
+							display: flex;
+							align-items: center;
+							gap: 5px;
+
+							font-weight: 600;
+							font-size: 12px;
+							line-height: 15px;
+							color: #8488ff;
+						}
+					}
+
+					&__range {
+						display: flex;
+						flex-direction: column;
+						gap: 5px;
+						margin-bottom: 4px;
+
+						.slider {
+							cursor: pointer;
+							display: inline-flex;
+							flex-direction: row-reverse;
+							align-items: center;
+
+							.level {
+								appearance: none;
+								width: 100%;
+								height: 6px;
+								background: rgb(82, 82, 82);
+								border-radius: 10px;
+								cursor: inherit;
+
+								&::-webkit-slider-thumb {
+									-webkit-appearance: none;
+									width: 18px;
+									height: 18px;
+									border-radius: 50%;
+									background: #8488ff;
+									cursor: pointer;
+									transition: background 0.2s;
+
+									&:hover {
+										background: #6a6fd8;
+									}
+								}
+							}
+
+							.volume {
+								display: inline-block;
+								vertical-align: top;
+								color: rgb(82, 82, 82);
+								height: auto;
+							}
+						}
+
+						> div {
+							width: 100%;
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+
+							> span {
+								font-weight: 600;
+								font-size: 12px;
+								line-height: 15px;
+								color: rgba(255, 255, 255, 0.5);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&__playlist {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+		width: 100%;
+		padding-bottom: 15px;
+		border-bottom: 1px solid #ffffff27;
+
+		&__img {
+			width: 190px;
+			aspect-ratio: 1/1;
+			background-color: red;
+			border-radius: 10px;
+		}
+
+		&__action {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 2px;
+
+			> h2 {
+				font-weight: 600;
+				font-size: 35px;
+				line-height: 34px;
+				color: #ffffff;
+			}
+			> span {
+				font-weight: 400;
+				font-size: 20px;
+				line-height: 34px;
+				color: rgba(255, 255, 255, 0.5);
+			}
+
+			> strong {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+				font-weight: 500;
+				font-size: 16px;
+				line-height: 21px;
+				color: #ffffff;
+			}
+
+			> div {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-top: 10px;
+
+				> button {
+					padding: 6px 17px;
+					background-color: #242438;
+					border-radius: 3px;
+
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+			}
+		}
+	}
+}

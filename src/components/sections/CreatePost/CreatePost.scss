@@ -1,0 +1,134 @@
+.createPost {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	background-color: #1a1a2e;
+	border-radius: 20px;
+	padding: 10px 20px;
+	&__input {
+		width: 100%;
+		outline: none;
+		border: none;
+		color: white;
+		font-size: 16px;
+		font-weight: 300;
+		&::placeholder {
+			color: rgba(255, 255, 255, 0.365);
+		}
+	}
+	.top {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		.EmojiPickerComponent {
+			position: absolute;
+			top: 110%;
+			right: 0;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease-in-out;
+			transform: translateY(10px);
+			&.hide {
+				opacity: 1;
+				z-index: 110;
+				visibility: visible;
+				transform: translateY(0);
+			}
+		}
+
+		.logo {
+			width: 50px;
+			height: 50px;
+		}
+		.container-input {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			outline: none;
+			border: none;
+			border: 1px solid rgba(255, 255, 255, 0.37);
+			width: 100%;
+			border-radius: 10px;
+			padding: 7px 14px;
+			width: 100%;
+			position: relative;
+
+			svg {
+				cursor: pointer;
+				transition: all 0.2s ease-in-out;
+				&:hover {
+					transform: scale(1.1);
+				}
+			}
+
+			.input-function {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+			}
+		}
+	}
+	.bottom-create {
+		width: 100%;
+		margin-top: 15px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.tags {
+			display: flex;
+			align-items: center;
+			gap: 22px;
+			.tag {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+				transition: all 0.2s ease-in-out;
+				cursor: pointer;
+				&:hover {
+					transform: translateY(-2px);
+					opacity: 0.7;
+				}
+				.name {
+					font-size: 14px;
+					font-weight: 600;
+					color: white;
+				}
+			}
+		}
+	}
+	&__button {
+		background-color: #131322;
+		display: flex;
+		gap: 20px;
+		padding: 10px 23px;
+		border-radius: 10px;
+		font-size: 16px;
+		font-weight: 600;
+		color: white;
+		@media (max-width: 1710px) {
+			padding: 8px 20px;
+			font-size: 15px;
+		}
+		@keyframes smooth-float {
+			0%,
+			100% {
+				transform: translateX(0px) rotate(0deg) scale(1);
+			}
+			25% {
+				transform: translateX(3px) rotate(8deg) scale(1.03);
+			}
+			50% {
+				transform: translateX(3px) rotate(0deg) scale(1.05);
+			}
+			75% {
+				transform: translateX(3px) rotate(-8deg) scale(1.03);
+			}
+		}
+
+		&:hover {
+			svg {
+				animation: smooth-float 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+			}
+		}
+	}
+}

@@ -1,0 +1,132 @@
+@mixin hover-effect {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform, background-color;
+}
+.sideBar {
+  @include hover-effect;
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    padding-left: 0;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 1;
+    font-size: 15px;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 15px;
+      width: 100%;
+
+      &.active {
+        background: white;
+        color: #000;
+        font-weight: 600;
+        color: #000;
+
+        svg {
+          path {
+            fill: #000;
+            stroke: #000;
+          }
+        }
+
+        svg {
+          transform: scale(1.1);
+          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+
+          path {
+            fill: #000;
+            stroke: #000;
+          }
+        }
+        .modif {
+          transform: scale(1.1);
+          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+
+          path {
+            fill: white;
+            stroke: #000;
+          }
+        }
+
+        &::before {
+          background: white;
+          transform: scaleX(1);
+        }
+      }
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+      z-index: -1;
+    }
+
+    svg {
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    &:hover {
+      color: #000;
+      transform: translateX(5px);
+
+      &::before {
+        background: white;
+        transform: scaleX(1);
+      }
+
+      svg {
+        transform: scale(1.1);
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+
+        path {
+          fill: #000;
+          stroke: #000;
+        }
+      }
+      .modif {
+        transform: scale(1.1);
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+
+        path {
+          fill: white;
+          stroke: #000;
+        }
+      }
+    }
+
+    &.active {
+      background: white;
+      color: #000;
+      font-weight: 600;
+
+      svg path {
+        fill: #000;
+        stroke: #000;
+      }
+    }
+  }
+}

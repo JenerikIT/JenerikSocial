@@ -1,0 +1,30 @@
+.sortBy-container {
+	background-color: rgba(255, 255, 255, 0.178) 10;
+	border: 0.5px solid #1a1a2e;
+	display: flex;
+	align-items: center;
+	padding: 9px 15px;
+	border-radius: 10px;
+	gap: 10px;
+	width: max-content;
+	color: white;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+	&:hover {
+		background-color: #1a1a2e;
+
+		strong {
+			transform: translateX(3px);
+		}
+	}
+	.sortBy {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+
+		strong {
+			font-weight: 600;
+			transition: all 0.3s ease-in-out;
+		}
+	}
+}

@@ -1,16 +1,8 @@
 import { NavLink } from "react-router-dom";
 import "./ProfileSidebar.scss";
+import { useAuthMeQuery } from "../../../api/auth/authApi";
 
 const ProfileSidebar = () => {
-  const itemsSideBar = [
-    "Профиль",
-    "Лента",
-    "Мессенджер",
-    "Звонки",
-    "Друзья",
-    "Фото",
-    "Музыку",
-  ];
   return (
     <div className="sideBar">
       <ul className="sideBar__menu">

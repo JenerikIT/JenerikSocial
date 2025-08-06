@@ -1,198 +1,276 @@
-$primary-color: #363fea;
-$background-color: #f8f9fa;
-$text-color: #333;
-$light-gray: #e9ecef;
-$border-color: #dee2e6;
-$error-color: #dc3545;
+.label {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+.post {
+  background: #1e1e2e;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  position: relative;
 
-.post-edit-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  font-family: "Segoe UI", system-ui, sans-serif;
-
-  .edit-header {
+  .top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    background: linear-gradient(135deg, $primary-color 0%, #080d6c 100%);
-    color: white;
+    margin-bottom: 15px;
+  }
 
-    h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 600;
+  .post__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .post__info {
+    .name {
+      font-weight: 500;
+      color: white;
     }
 
-    .close-button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.8rem;
+    p {
+      color: #8e8e93;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+  }
+
+  .image {
+    position: relative;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .upload-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.85rem;
       cursor: pointer;
-      padding: 0 0.5rem;
-      line-height: 1;
-      transition: transform 0.2s;
+      transition: all 0.3s ease;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
 
       &:hover {
-        transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
       }
     }
   }
-}
 
-.edit-form {
-  padding: 1.5rem;
-
-  .form-section {
-    margin-bottom: 1.5rem;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: $text-color;
-    font-size: 0.95rem;
-  }
-
-  .form-input,
-  .form-textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid $border-color;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.2s;
-    background-color: $light-gray;
-
-    &:focus {
-      outline: none;
-      border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
-      background-color: white;
-    }
-
-    &::placeholder {
-      color: #6c757d;
-      opacity: 0.6;
-    }
-  }
-
-  .form-textarea {
-    min-height: 200px;
-    resize: vertical;
-    line-height: 1.5;
-  }
-}
-
-.image-preview-container {
-  margin-top: 1rem;
-  text-align: center;
-
-  .image-preview {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 8px;
-    border: 1px solid $border-color;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-}
-.img {
-  margin-top: 20px;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 2rem;
-
-  .save-button {
-    padding: 0.75rem 2rem;
-    background-color: $primary-color;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+  .image-edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 
-    &:hover:not(:disabled) {
-      background-color: darken($primary-color, 10%);
-      transform: translateY(-1px);
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .edit-image-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #8488ff;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .description {
+    color: white;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .edit-mode {
+      border-bottom: 2px dashed #8488ff;
+      padding: 10px;
+      width: 100%;
     }
 
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
     }
-
-    .button-loading {
+  }
+  .title {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .input-title {
+      border: none;
+      outline: none;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+      width: 100%;
+      color: white;
+    }
+  }
+  .tags-block {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    .label-tags {
+      color: white;
+      font-weight: 500;
+      margin-bottom: 5px;
+      span {
+        opacity: 0.7;
+        font-size: 15px;
+      }
+    }
+    .container-tags {
       display: flex;
       align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      .tag {
+        background: rgba(110, 142, 251, 0.2);
+        color: #6e8efb;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
 
-      &::after {
-        content: "";
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        margin-left: 0.5rem;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: white;
-        animation: spin 1s ease-in-out infinite;
+        .tag-remove {
+          background: none;
+          border: none;
+          color: inherit;
+          cursor: pointer;
+          font-size: 1rem;
+          padding: 0;
+          display: flex;
+          align-items: center;
+
+          &:hover {
+            color: #ff4d4d;
+          }
+        }
+      }
+    }
+    .tagInput {
+      outline: none;
+      border: none;
+      color: white;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .post__footer {
+    display: flex;
+    gap: 15px;
+  }
+
+  .edit-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+
+    button {
+      padding: 8px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .cancel-btn {
+      background: transparent;
+      border: 1px solid #8488ff;
+      color: #8488ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      &:hover {
+        background: rgba(132, 136, 255, 0.1);
+      }
+    }
+    .save-btn {
+      background: #8488ff;
+      border: none;
+      color: white;
+      border-radius: 7px;
+      padding: 9px;
+      transition: all 0.3s ease;
+      &:hover {
+        background: #6a6dc7;
       }
     }
   }
-}
 
-.loading-spinner,
-.error-message {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-}
-
-.error-message {
-  color: $error-color;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// Адаптивность
-@media (max-width: 768px) {
-  .post-edit-container {
-    margin: 0;
-    border-radius: 0;
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
   }
 
-  .edit-form {
-    padding: 1rem;
-  }
+  .add-tag-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: 1px dashed #8488ff;
+    color: #8488ff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
 
-  .form-actions {
-    justify-content: center;
+    &:hover {
+      background: rgba(132, 136, 255, 0.1);
+    }
 
-    .save-button {
-      width: 100%;
-      padding: 1rem;
-      background-color: black;
+    svg {
+      width: 12px;
+      height: 12px;
     }
   }
 }

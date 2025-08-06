@@ -17,13 +17,22 @@ type UserData = {
 };
 
 type AuthResponse = {
-  userData: {
-    id: string;
-    email: string;
-    name?: string;
-    state: boolean;
-  };
+  _id: string;
+  email: string;
+  fullName: string;
+  state: boolean;
   token: string;
+};
+type AuthResponseCheck = {
+  userData: {
+    _id: string;
+    email: string;
+    fullName: string;
+    token: string;
+    avatarUrl: string;
+    phone: string;
+  };
+  state: boolean;
 };
 
 export const authApi = createApi({
@@ -48,7 +57,7 @@ export const authApi = createApi({
         return response;
       },
     }),
-    authMe: builder.query<AuthResponse["userData"], void>({
+    authMe: builder.query<AuthResponseCheck, void>({
       query: () => "/me",
       transformErrorResponse: (response) => {
         if (response.status === 401) {

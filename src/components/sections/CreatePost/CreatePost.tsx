@@ -1,192 +1,337 @@
-import { useState } from "react";
-import logoProfile from "../../../assets/img/logoProfile.svg";
+import { useState, useRef } from "react";
+import {
+  useCreatePostMutation,
+  useUploadImgMutation,
+} from "../../../api/posts/postsApi";
 import EmojiPickerComponent from "../../../UI/EmodjiPicker";
 import "./CreatePost.scss";
-import axios from "../../../api/axios";
+import { useNavigate } from "react-router-dom";
 
-const CreatePost = () => {
-  const [openEmodji, setOpenEmodji] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const createPostApi = async () => {
-    if (!inputValue.trim().length) return;
+interface PostCreateProps {
+  title: string;
+  text: string;
+  tagInput: string;
+  tags: string[];
+  emoji: string;
+}
+type Props = {
+  close: boolean;
+};
+
+const CreatePost = ({ close }: Props) => {
+  const navigate = useNavigate();
+  const [uploadImg] = useUploadImgMutation();
+  const [openEmoji, setOpenEmoji] = useState(false);
+  const [imagePost, setImagePost] = useState("");
+  const [formData, setFormData] = useState<PostCreateProps>({
+    title: "",
+    text: "",
+    tagInput: "",
+    tags: [],
+    emoji: "",
+  });
+  const formRefs = useRef({
+    title: null as HTMLInputElement | null,
+    text: null as HTMLTextAreaElement | null,
+    tags: null as HTMLInputElement | null,
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [createPost, { isLoading }] = useCreatePostMutation();
+
+  const addTags = () => {
+    if (!formData.tagInput.trim()) return;
+
+    const newTags = formData.tagInput
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+    setFormData((prev) => ({
+      ...prev,
+      tags: [...new Set([...prev.tags, ...newTags])],
+      tagInput: "",
+    }));
+  };
+  const handleKeyDown = (
+    e: React.KeyboardEvent,
+    fieldName: keyof typeof formRefs.current
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      switch (fieldName) {
+        case "title":
+          formRefs.current.text?.focus();
+          break;
+        case "text":
+          formRefs.current.tags?.focus();
+          break;
+        case "tags":
+          addTags(); // Обработка тегов
+          break;
+      }
+    }
+  };
+
+  const removeTag = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!event.target.files || event.target.files.length === 0) return;
+
     try {
-      const params = {
-        title: "как дела?",
-        text: inputValue,
-        tags: [],
-        imageUrl: "",
+      const formImgData = new FormData();
+      const file = event.target.files[0];
+      formImgData.append("image", file);
+      const { data } = await uploadImg(formImgData);
+      setImagePost(`http://localhost:4444${data.url}`);
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Не удалось загрузить изображение");
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const removeImage = () => {
+    setImagePost("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const createPostApi = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.text.trim()) {
+      alert("Текст статьи не может быть пустым");
+      return;
+    }
+
+    try {
+      const postData = {
+        title: formData.title,
+        text: formData.text,
+        tags: formData.tags,
+        imageUrl: imagePost,
       };
-      const token = localStorage.getItem("token");
-      const response = await axios.post("/posts", params, {
-        headers: {
-          Authorization: token,
-        },
+
+      await createPost(postData).unwrap();
+      navigate("/");
+      // Сброс формы после успешного создания
+      setFormData({
+        title: "",
+        text: "",
+        tagInput: "",
+        tags: [],
+        emoji: "",
       });
-      console.log(response);
-      location.reload();
+      setImagePost("");
 
-      setInputValue("");
-
-      console.log("Пост создан:", response.data);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (err) {
-      console.error("Ошибка при создании поста:");
+      console.error("Ошибка при создании поста:", err);
       alert("Не удалось создать пост");
     }
   };
 
   const handleEmojiSelect = (emoji: string) => {
-    setInputValue((prev) => prev + emoji);
-    setOpenEmodji(false);
+    setFormData((prev) => ({
+      ...prev,
+      text: prev.text + emoji,
+    }));
+    setOpenEmoji(false);
   };
+
   return (
     <div className="createPost">
-      <div className="top">
-        <img src={logoProfile} alt="" className="logo" />
-        <div className="container-input">
-          <input
-            type="text"
-            className="createPost__input"
-            placeholder="What is happening"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-              if (e.key === "Enter" && inputValue.trim()) {
-                e.preventDefault();
-                createPostApi();
-                setInputValue("");
-              }
-            }}
-          />
-          <div className="input-function">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 16.25C9.38 16.25 7.25 14.12 7.25 11.5V6C7.25 3.38 9.38 1.25 12 1.25C14.62 1.25 16.75 3.38 16.75 6V11.5C16.75 14.12 14.62 16.25 12 16.25ZM12 2.75C10.21 2.75 8.75 4.21 8.75 6V11.5C8.75 13.29 10.21 14.75 12 14.75C13.79 14.75 15.25 13.29 15.25 11.5V6C15.25 4.21 13.79 2.75 12 2.75Z"
-                fill="white"
-                fillOpacity="0.53"
-              />
-              <path
-                d="M12.0001 19.7499C7.3701 19.7499 3.6001 15.9799 3.6001 11.3499V9.6499C3.6001 9.2399 3.9401 8.8999 4.3501 8.8999C4.7601 8.8999 5.1001 9.2399 5.1001 9.6499V11.3499C5.1001 15.1499 8.2001 18.2499 12.0001 18.2499C15.8001 18.2499 18.9001 15.1499 18.9001 11.3499V9.6499C18.9001 9.2399 19.2401 8.8999 19.6501 8.8999C20.0601 8.8999 20.4001 9.2399 20.4001 9.6499V11.3499C20.4001 15.9799 16.6301 19.7499 12.0001 19.7499Z"
-                fill="white"
-                fillOpacity="0.53"
-              />
-              <path
-                d="M13.3901 7.17982C13.3101 7.17982 13.2201 7.16982 13.1301 7.13982C12.4001 6.86982 11.6001 6.86982 10.8701 7.13982C10.4801 7.27982 10.0501 7.07982 9.91012 6.68982C9.77012 6.29982 9.97012 5.86982 10.3601 5.72982C11.4201 5.34982 12.5901 5.34982 13.6501 5.72982C14.0401 5.86982 14.2401 6.29982 14.1001 6.68982C13.9801 6.98982 13.6901 7.17982 13.3901 7.17982Z"
-                fill="white"
-                fillOpacity="0.53"
-              />
-              <path
-                d="M12.8001 9.29982C12.7301 9.29982 12.6701 9.28982 12.6001 9.26982C12.2001 9.15982 11.7901 9.15982 11.3901 9.26982C10.9901 9.37982 10.5801 9.13982 10.4701 8.73982C10.3601 8.34982 10.6001 7.93982 11.0001 7.82982C11.6501 7.64982 12.3501 7.64982 13.0001 7.82982C13.4001 7.93982 13.6401 8.34982 13.5301 8.74982C13.4401 9.07982 13.1301 9.29982 12.8001 9.29982Z"
-                fill="white"
-                fillOpacity="0.53"
-              />
-              <path
-                d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
-                fill="white"
-                fillOpacity="0.53"
-              />
-            </svg>
-            <svg
-              width="24"
-              height="23"
-              viewBox="0 0 24 23"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              onClick={() => setOpenEmodji((prev) => !prev)}
-            >
-              <path
-                d="M17.9347 10.6052L18.1361 9.88271L17.9347 10.6052ZM18.3539 11.0274L19.0847 10.8584L18.3539 11.0274ZM12.8019 4.68592L13.0619 3.98243L12.8019 4.68592ZM13.1651 5.15869L12.4233 5.26917L13.1651 5.15869ZM20.5661 1C20.5661 0.585786 20.2303 0.25 19.8161 0.25C19.4019 0.25 19.0661 0.585786 19.0661 1H20.5661ZM19.0661 7.6006C19.0661 8.01481 19.4019 8.3506 19.8161 8.3506C20.2303 8.3506 20.5661 8.01481 20.5661 7.6006H19.0661ZM16.5761 3.56494C16.1619 3.56494 15.8261 3.90073 15.8261 4.31494C15.8261 4.72916 16.1619 5.06494 16.5761 5.06494V3.56494ZM23 5.06494C23.4142 5.06494 23.75 4.72916 23.75 4.31494C23.75 3.90073 23.4142 3.56494 23 3.56494V5.06494ZM7.48504 14.4587C7.26967 14.1049 6.80825 13.9926 6.45443 14.208C6.10061 14.4234 5.98838 14.8848 6.20375 15.2386L7.48504 14.4587ZM13.8104 15.2386C14.0258 14.8848 13.9135 14.4234 13.5597 14.208C13.2059 13.9926 12.7445 14.1049 12.5291 14.4587L13.8104 15.2386ZM7.22926 9.9425V9.1925C6.81504 9.1925 6.47926 9.52829 6.47926 9.9425H7.22926ZM7.32013 9.9425H8.07013C8.07013 9.52829 7.73434 9.1925 7.32013 9.1925V9.9425ZM12.703 9.9425V9.1925C12.2888 9.1925 11.953 9.52829 11.953 9.9425H12.703ZM12.7838 9.9425H13.5338C13.5338 9.52829 13.198 9.1925 12.7838 9.1925V9.9425ZM7.32013 10.0168V10.7668C7.73434 10.7668 8.07013 10.431 8.07013 10.0168H7.32013ZM7.22926 10.0168H6.47926C6.47926 10.431 6.81504 10.7668 7.22926 10.7668V10.0168ZM12.7838 10.0168V10.7668C13.198 10.7668 13.5338 10.431 13.5338 10.0168H12.7838ZM12.703 10.0168H11.953C11.953 10.431 12.2888 10.7668 12.703 10.7668V10.0168ZM13.0619 3.98243C12.0414 3.60528 10.9402 3.3998 9.79321 3.3998V4.8998C10.7598 4.8998 11.6851 5.07278 12.5419 5.38941L13.0619 3.98243ZM18.1361 9.88271C15.9413 9.27082 14.255 7.38516 13.9069 5.04821L12.4233 5.26917C12.858 8.18787 14.9647 10.5557 17.7333 11.3276L18.1361 9.88271ZM19.3364 13.0749C19.3364 12.3131 19.2494 11.5709 19.0847 10.8584L17.6232 11.1964C17.7625 11.7988 17.8364 12.4276 17.8364 13.0749H19.3364ZM9.79321 22.75C15.0743 22.75 19.3364 18.4077 19.3364 13.0749H17.8364C17.8364 17.6004 14.2249 21.25 9.79321 21.25V22.75ZM0.25 13.0749C0.25 18.4077 4.51215 22.75 9.79321 22.75V21.25C5.36156 21.25 1.75 17.6004 1.75 13.0749H0.25ZM9.79321 3.3998C4.51215 3.3998 0.25 7.74205 0.25 13.0749H1.75C1.75 8.54935 5.36156 4.8998 9.79321 4.8998V3.3998ZM17.7333 11.3276C17.7061 11.32 17.6441 11.2866 17.6232 11.1964L19.0847 10.8584C18.967 10.3495 18.5712 10.004 18.1361 9.88271L17.7333 11.3276ZM12.5419 5.38941C12.4955 5.37226 12.4641 5.34407 12.4467 5.32092C12.4304 5.29916 12.425 5.28086 12.4233 5.26917L13.9069 5.04821C13.8415 4.60931 13.557 4.16539 13.0619 3.98243L12.5419 5.38941ZM19.0661 1V7.6006H20.5661V1H19.0661ZM16.5761 5.06494H23V3.56494H16.5761V5.06494ZM10.0071 15.9163C8.96046 15.9163 8.02555 15.3467 7.48504 14.4587L6.20375 15.2386C6.99355 16.5362 8.39441 17.4163 10.0071 17.4163V15.9163ZM12.5291 14.4587C11.9886 15.3467 11.0537 15.9163 10.0071 15.9163V17.4163C11.6197 17.4163 13.0206 16.5362 13.8104 15.2386L12.5291 14.4587ZM7.22926 10.6925H7.32013V9.1925H7.22926V10.6925ZM12.703 10.6925H12.7838V9.1925H12.703V10.6925ZM6.57013 9.9425V10.0168H8.07013V9.9425H6.57013ZM7.32013 9.26679H7.22926V10.7668H7.32013V9.26679ZM7.97926 10.0168V9.9425H6.47926V10.0168H7.97926ZM12.0338 9.9425V10.0168H13.5338V9.9425H12.0338ZM12.7838 9.26679H12.703V10.7668H12.7838V9.26679ZM13.453 10.0168V9.9425H11.953V10.0168H13.453Z"
-                fill="white"
-                fillOpacity="0.53"
-              />
-            </svg>
-            <EmojiPickerComponent
-              openEmodji={openEmodji}
-              onEmojiClick={handleEmojiSelect}
+      <form className="form" onSubmit={createPostApi}>
+        <h1 className="form-title">
+          Создайте свой пост и поделитесь эмоциями!
+        </h1>
+        <div className="form-grid">
+          <div className="form-group">
+            <label htmlFor="title" className="form-label">
+              Заголовок статьи
+              <span className="optional"> (необязательно)</span>
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              className="form-input"
+              placeholder="Введите заголовок статьи..."
+              value={formData.title}
+              onChange={handleChange}
+              ref={(el) => (formRefs.current.title = el)}
+              onKeyDown={(e) => handleKeyDown(e, "title")}
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="content" className="form-label">
+              Текст статьи
+            </label>
+            <div className="textarea-wrapper">
+              <textarea
+                id="content"
+                ref={(el) => (formRefs.current.text = el)}
+                name="text"
+                className="form-textarea"
+                placeholder="Расскажите что-нибудь интересное..."
+                rows={5}
+                value={formData.text}
+                onChange={handleChange}
+                required
+                onKeyDown={(e) => handleKeyDown(e, "text")}
+              />
+              <button
+                type="button"
+                className="emoji-trigger"
+                onClick={() => setOpenEmoji(!openEmoji)}
+                aria-label="Добавить эмодзи"
+              >
+                😊
+              </button>
+              {openEmoji && (
+                <div className="emoji-picker-wrapper">
+                  <EmojiPickerComponent
+                    openEmodji={openEmoji}
+                    onEmojiClick={handleEmojiSelect}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="tags" className="form-label">
+              Теги
+              <span className="optional"> (через запятую)</span>
+            </label>
+            <div className="tags-container">
+              {formData.tags.map((tag, index) => (
+                <span key={index} className="tag">
+                  {tag}
+                  <button
+                    type="button"
+                    className="tag-remove"
+                    onClick={() => removeTag(index)}
+                    aria-label={`Удалить тег ${tag}`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+            <input
+              id="tags"
+              name="tagInput"
+              className="form-input"
+              placeholder="Например: путешествия, кулинария, IT..."
+              value={formData.tagInput}
+              ref={(el) => (formRefs.current.tags = el)}
+              onChange={handleChange}
+              onKeyDown={(e) => handleKeyDown(e, "tags")}
+              onBlur={addTags}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Медиафайлы</label>
+            <div className="media-upload">
+              <input
+                type="file"
+                id="media-upload"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                className="media-input"
+                accept="image/*"
+              />
+              <label htmlFor="media-upload" className="upload-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M3 17V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V17"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M8 12L12 8M12 8L16 12M12 8V16"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Загрузить изображение
+              </label>
+            </div>
+            {imagePost && (
+              <div className="image-preview">
+                <img src={imagePost} alt="Превью загруженного изображения" />
+                <span>Удалить</span>
+                <button
+                  type="button"
+                  className="remove-image"
+                  onClick={removeImage}
+                  aria-label="Удалить изображение"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="bottom-create">
-        <div className="tags">
-          <div className="tag">
-            <svg
-              width="19"
-              height="18"
-              viewBox="0 0 19 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+
+        <div className="form-actions">
+          {close && (
+            <button
+              className="cancel-btn"
+              onClick={() => {
+                navigate("/");
+              }}
             >
-              <path
-                d="M4.16428 16.4452L11.7131 9.34048L15.2655 12.8929M4.16428 16.4452H13.0452C14.5167 16.4452 15.7095 15.2524 15.7095 13.781V9.34048M4.16428 16.4452C2.69284 16.4452 1.5 15.2524 1.5 13.781V4.90001C1.5 3.42856 2.69284 2.23572 4.16428 2.23572H9.9369M14.8214 6.52382L14.8214 4.01191M14.8214 4.01191L14.8214 1.5M14.8214 4.01191L12.3095 4.01191M14.8214 4.01191L17.3333 4.01191M6.82857 6.23215C6.82857 6.96787 6.23215 7.56429 5.49643 7.56429C4.7607 7.56429 4.16428 6.96787 4.16428 6.23215C4.16428 5.49643 4.7607 4.90001 5.49643 4.90001C6.23215 4.90001 6.82857 5.49643 6.82857 6.23215Z"
-                stroke="#CFCFCF"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="name">Media content</span>
-          </div>
-          <div className="tag">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M14.6668 11.3335H1.3335M14.6668 4.66683H1.3335M3.55572 14.6668L5.77794 1.3335M10.2224 14.6668L12.4446 1.3335"
-                stroke="#CFCFCF"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-            <span className="name">Hashtags</span>
-          </div>
-          <div className="tag">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7 11.5L4.5 9L7 6.5M11 6.5L13.5 9L11 11.5M3 17C1.89543 17 1 16.1046 1 15V3C1 1.89543 1.89543 1 3 1H15C16.1046 1 17 1.89543 17 3V15C17 16.1046 16.1046 17 15 17H3Z"
-                stroke="#CFCFCF"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="name">code</span>
-          </div>
-        </div>
-        <button className="createPost__button">
-          Post
-          <svg
-            onClick={createPostApi}
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+              Отмена
+            </button>
+          )}
+
+          <button
+            type="submit"
+            className="submit-button"
+            disabled={isLoading || !formData.text.trim()}
           >
-            <path
-              d="M20.8477 11.5L9.84487 11.5M5.20833 15.66H3.08923M5.20833 11.6461H1M5.20833 7.63223H3.08923M8.92811 4.11252L20.4671 10.525C21.1776 10.9199 21.1777 12.0801 20.4671 12.475L8.92811 18.8875C8.13761 19.3268 7.2974 18.4006 7.64952 17.4781L9.76561 11.9343C9.87129 11.6574 9.87129 11.3426 9.76561 11.0657L7.64952 5.52188C7.2974 4.59938 8.13761 3.67323 8.92811 4.11252Z"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
-      </div>
+            {isLoading ? (
+              <span className="loading-spinner"></span>
+            ) : (
+              <>
+                Опубликовать
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </>
+            )}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

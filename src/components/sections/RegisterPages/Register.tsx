@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import "./register.scss";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import {
+  useAuthMeQuery,
+  useRegisterPostMutation,
+} from "../../../api/auth/authApi";
 import "./register.scss";
-import { useRegisterPostMutation } from "../../../api/auth/authApi";
+import axios from "axios";
 
 type FormData = {
   fullName: string;
@@ -13,30 +16,58 @@ type FormData = {
   checkbox: string;
 };
 function Register({}) {
+  const navigate = useNavigate();
+
   const [checked, SetChecked] = useState(false);
   const [trueReg, SetTrueReg] = useState<boolean>(false);
   const [fullName, SetFullNameValue] = useState("");
   const [registerPost, { isLoading }] = useRegisterPostMutation();
-  const navigate = useNavigate();
+  const [avatarUrl, SetAvatarUser] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const imgUserRef = useRef<HTMLInputElement>(null);
+  const handleImageUploadUser = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (!e.target.files || e.target.files?.length === 0) return;
+    const formDataImgUser = new FormData();
+    const file = e.target.files[0];
+    formDataImgUser.append("image", file);
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4444/upload/user",
+        formDataImgUser
+      );
+      if (!data || !data.url) {
+        throw new Error("Invalid server response");
+      }
+      SetAvatarUser(`http://localhost:4444${data.url}`);
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+  };
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
   const onSubmit = async (formData: FormData) => {
+    if (fullName.length < 4)
+      return alert("Имя должно состоять минимум из 4 букв");
     if (checked && formData) {
       try {
-        const newFormData = { ...formData, fullName: fullName };
-        const response = await registerPost(newFormData).unwrap();
-        const token = response.token;
+        const newFormData = {
+          ...formData,
+          fullName: fullName,
+          avatarUrl: avatarUrl,
+        };
+        const { token } = await registerPost(newFormData).unwrap();
         localStorage.setItem("token", token);
-        console.log(response);
         navigate("/");
       } catch (error) {
         console.error("Ошибка регистрации:", error);
@@ -51,6 +82,53 @@ function Register({}) {
         </div>
         <form className="register__form" onSubmit={handleSubmit(onSubmit)}>
           <div className={`register__input-group ${!trueReg ? "err" : ""}`}>
+            <div className="container-user">
+              <input
+                type="file"
+                hidden
+                ref={imgUserRef}
+                onChange={handleImageUploadUser}
+                accept="image/*"
+              />
+              <div
+                className="img-container"
+                onClick={() => imgUserRef.current?.click()}
+              >
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="imgUser" className="userImg" />
+                ) : (
+                  <svg
+                    className="userImg"
+                    width="80"
+                    height="80"
+                    viewBox="0 0 80 80"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 40C0 17.9086 17.9086 0 40 0V0C62.0914 0 80 17.9086 80 40V40C80 62.0914 62.0914 80 40 80V80C17.9086 80 0 62.0914 0 40V40Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M39.5 34.6328C42.3793 34.6328 44.7332 37.0244 44.7334 39.999C44.7334 42.9738 42.3795 45.3662 39.5 45.3662C36.6205 45.3662 34.2666 42.9739 34.2666 39.999C34.2668 37.0244 36.6206 34.6328 39.5 34.6328Z"
+                      fill="black"
+                      fill-opacity="0.87"
+                      stroke="white"
+                    />
+                    <path
+                      d="M44.6519 22.166L47.7808 25.666L47.9302 25.833H53.8335C55.5173 25.833 56.9163 27.2478 56.9165 28.999V50.999C56.9165 52.7504 55.5174 54.166 53.8335 54.166H25.1665C23.4827 54.1658 22.0835 52.7503 22.0835 50.999V28.999C22.0837 27.2479 23.4828 25.8332 25.1665 25.833H31.0698L31.2192 25.666L34.3481 22.166H44.6519ZM39.5005 30.333C34.2687 30.333 30.0417 34.6739 30.0415 39.999C30.0415 45.3243 34.2686 49.666 39.5005 49.666C44.7323 49.6658 48.9585 45.3242 48.9585 39.999C48.9583 34.674 44.7321 30.3332 39.5005 30.333Z"
+                      fill="#0D0D17"
+                      fill-opacity="0.87"
+                      stroke="white"
+                    />
+                  </svg>
+                )}
+
+                <div className="overlay-img">
+                  <span>Добавить фото</span>
+                </div>
+              </div>
+            </div>
             <div className="register__input-container">
               <input
                 value={fullName}
@@ -59,7 +137,7 @@ function Register({}) {
                 }}
                 ref={inputRef}
                 style={
-                  fullName.length < 5 ? { border: "1px solid #D70000" } : {}
+                  fullName.length < 4 ? { border: "1px solid #D70000" } : {}
                 }
                 type="text"
                 placeholder="Имя"
@@ -333,7 +411,7 @@ function Register({}) {
                 !checked ? "register__checkbox important" : "register__checkbox"
               }
               checked={checked}
-              onClick={() => {
+              onChange={() => {
                 SetChecked(!checked);
               }}
             />

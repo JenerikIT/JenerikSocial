@@ -1,11 +1,11 @@
-import { PostProps } from "../../api/posts/postsApi";
+import { PostFavouritePost } from "./favourite";
 
-export const loadInitialState = (): PostProps[] => {
+export const loadInitialState = (): PostFavouritePost[] => {
   try {
-    const savedFavourite = localStorage.getItem("favouriteItems");
-    return savedFavourite ? JSON.parse(savedFavourite) : [];
+    const saved = localStorage.getItem("favouriteItems");
+    return saved ? JSON.parse(saved) : [];
   } catch (error) {
-    console.log(error);
+    console.error("Failed to load favorites", error);
     return [];
   }
 };

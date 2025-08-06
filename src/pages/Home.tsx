@@ -1,22 +1,18 @@
+import { Outlet } from "react-router-dom";
 import ContactList from "../components/sections/ContactList/ContactList";
-import CreatePost from "../components/sections/CreatePost/CreatePost";
+
 import News from "../components/sections/News/News";
-import PostList from "../components/sections/PostList/PostList";
-import SortDropdown from "../components/sections/SortDropdown/SortDropdown";
+
 import UserHistory from "../components/sections/UserHistory/UserHistory";
 
-type Props = {};
-
-function Home({}: Props) {
+function Home() {
   return (
     <>
       <div className="container-posts">
         <UserHistory type="none" />
-        <CreatePost />
-        <SortDropdown />
-        <PostList />
+        <Outlet />
       </div>
-      <div className="contianer-Contact">
+      <div className="container-Contact">
         <ContactList />
         <News />
       </div>

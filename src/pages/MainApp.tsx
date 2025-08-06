@@ -1,10 +1,13 @@
+import { Route, Routes } from "react-router-dom";
 import Header from "../components/Header/Header";
 import ProfileSidebar from "../components/sections/ProfileSidebar/ProfileSidebar";
 import Home from "./Home";
-import { Route, Routes } from "react-router-dom";
 import Profile from "./Profile";
 import Favourite from "../components/sections/Favourite/Favourite";
 import Music from "./Music/Music";
+import FullPostEdit from "../components/sections/PostList/FullPostEdit";
+import PostList from "../components/sections/PostList/PostList";
+import CreatePost from "../components/sections/CreatePost/CreatePost";
 
 function MainApp() {
   return (
@@ -14,7 +17,11 @@ function MainApp() {
         <div className="main-container">
           <ProfileSidebar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />}>
+              <Route index element={<PostList />} />
+              <Route path="posts/:id/edit" element={<FullPostEdit />} />
+            </Route>
+            <Route path="/posts/create" element={<CreatePost />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/favourite" element={<Favourite />} />
             <Route path="/music" element={<Music />} />

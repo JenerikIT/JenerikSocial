@@ -1,31 +1,42 @@
+import { useAuthMeQuery } from "../../../api/auth/authApi";
 import UserHistory from "../UserHistory/UserHistory";
+import ImgAvatarDefault from "../../../assets/img/logoProfile.svg";
 import "./UserProfile.scss";
 
 const UserProfile = () => {
+  const { data, isLoading } = useAuthMeQuery();
   return (
     <div className="user">
       <div className="user__cap">
-        <div>
-          <div>
-            <span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.5364 19.2428L13.2787 18.4109C14.1894 17.3902 15.8235 17.5229 16.5576 18.6772C17.2415 19.7525 18.7273 19.9563 19.6755 19.105L21.021 17.8969M2.97876 19.4699L7.34474 18.5902C7.57652 18.5435 7.78934 18.4293 7.95648 18.2621L17.7302 8.48307C18.1988 8.01422 18.1984 7.25423 17.7294 6.78577L15.659 4.71769C15.1902 4.24942 14.4306 4.24974 13.9622 4.7184L4.18752 14.4985C4.02071 14.6654 3.90681 14.8777 3.86006 15.109L2.97876 19.4699Z"
-                  stroke="black"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
-          </div>
-        </div>
+        {!data?.userData.avatarUrl ? (
+          <svg
+            className="avatarImg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_3190_16162)">
+              <path
+                d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM6.023 15.416C7.491 17.606 9.695 19 12.16 19C14.624 19 16.829 17.607 18.296 15.416C16.6317 13.8606 14.4379 12.9968 12.16 13C9.88171 12.9966 7.68751 13.8604 6.023 15.416ZM12 11C12.7956 11 13.5587 10.6839 14.1213 10.1213C14.6839 9.55871 15 8.79565 15 8C15 7.20435 14.6839 6.44129 14.1213 5.87868C13.5587 5.31607 12.7956 5 12 5C11.2044 5 10.4413 5.31607 9.87868 5.87868C9.31607 6.44129 9 7.20435 9 8C9 8.79565 9.31607 9.55871 9.87868 10.1213C10.4413 10.6839 11.2044 11 12 11Z"
+                fill="white"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_3190_16162">
+                <rect width="24" height="24" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        ) : (
+          <img
+            src={data.userData.avatarUrl}
+            alt="avatar"
+            className="avatarImg"
+          />
+        )}
+
         <button className="button-edit">
           <svg
             width="12"
@@ -46,7 +57,7 @@ const UserProfile = () => {
       <div className="user__info">
         <div className="user__info-header">
           <div>
-            <h2>Jenerik</h2>
+            <h2>{data?.userData.fullName}</h2>
             <span>Ux designer</span>
             <small className="user__location">
               <svg

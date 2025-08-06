@@ -14,7 +14,7 @@ function Login() {
   const navigate = useNavigate();
   const [email, setValueEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [loginUser, {}] = useLoginMutation();
+  const [loginUser] = useLoginMutation();
   const onChangeValueEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setValueEmail(e.target.value);
   };
@@ -29,7 +29,6 @@ function Login() {
       const response = await loginUser(params).unwrap();
       localStorage.setItem("token", response.token);
       navigate("/");
-      console.log("Успех:", response);
     } catch (error: any) {
       console.error("Ошибка:", error);
       setServerError(error.data?.message || "Неверный логин или пароль");
@@ -223,15 +222,14 @@ function Login() {
 
         <div className="Login__footer">
           У вас нет аккаунта?
-          <a
-            href="#"
+          <span
             className="Login__link"
             onClick={() => {
               navigate("/register");
             }}
           >
             Зарегистрироваться
-          </a>
+          </span>
         </div>
       </div>
     </form>

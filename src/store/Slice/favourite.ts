@@ -1,9 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PostProps } from "../../api/posts/postsApi";
+import { User } from "../../api/posts/postsApi";
 import { loadInitialState } from "./storage";
 
+export type PostFavouritePost = {
+  title?: string;
+  _id: string;
+  text: string;
+  user?: User;
+  createdAt: string;
+  likeCount: number;
+};
 interface FavouriteState {
-  itemsFavourite: PostProps[];
+  itemsFavourite: PostFavouritePost[];
 }
 
 const initialState: FavouriteState = {
@@ -14,16 +22,24 @@ const favouriteSlice = createSlice({
   name: "favourite",
   initialState,
   reducers: {
-    addFavourite: (state, action: PayloadAction<PostProps>) => {
-      const existingIndex = state.itemsFavourite.findIndex(
-        (item) => item._id === action.payload._id
+    addFavourite: (state, action: PayloadAction<PostFavouritePost>) => {
+      const checkLike = state.itemsFavourite.some(
+        (obj) => obj._id === action.payload._id
       );
-
-      if (existingIndex === -1) {
+      if (!checkLike) {
         state.itemsFavourite.push(action.payload);
-      } else {
-        state.itemsFavourite.splice(existingIndex, 1);
       }
+
+      localStorage.setItem(
+        "favouriteItems",
+        JSON.stringify(state.itemsFavourite)
+      );
+    },
+
+    removeFavouritePost: (state, action: PayloadAction<{ _id: string }>) => {
+      state.itemsFavourite = state.itemsFavourite.filter(
+        (post) => post._id !== action.payload._id
+      );
 
       localStorage.setItem(
         "favouriteItems",
@@ -37,5 +53,6 @@ const favouriteSlice = createSlice({
   },
 });
 
-export const { addFavourite, clearFavourites } = favouriteSlice.actions;
+export const { addFavourite, clearFavourites, removeFavouritePost } =
+  favouriteSlice.actions;
 export default favouriteSlice.reducer;

@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import Header from "../components/Header/Header";
+import CreatePost from "../components/sections/CreatePost/CreatePost";
+import Favourite from "../components/sections/Favourite/Favourite";
+import FullPostEdit from "../components/sections/PostList/FullPostEdit";
+import { PostList } from "../components/sections/PostList/PostList";
 import ProfileSidebar from "../components/sections/ProfileSidebar/ProfileSidebar";
 import Home from "./Home";
-import Profile from "./Profile";
-import Favourite from "../components/sections/Favourite/Favourite";
 import Music from "./Music/Music";
-import FullPostEdit from "../components/sections/PostList/FullPostEdit";
-import PostList from "../components/sections/PostList/PostList";
-import CreatePost from "../components/sections/CreatePost/CreatePost";
+import Profile from "./Profile";
 
 function MainApp() {
   return (

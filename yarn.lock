@@ -1034,7 +1034,7 @@ ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-antd@^5.24.6:
+antd@^5.26.7:
   version "5.26.7"
   resolved "https://registry.yarnpkg.com/antd/-/antd-5.26.7.tgz#e2f7e37330b27eec0de7a7789767975373f61602"
   integrity sha512-iCyXN6+i2CUVEOSzzJKfbKeg115qoJhGvSkCh5uzAf9hANwHUOJQhsMn+KtN+Lx/2NQ6wfM7nGZ+7NPNO5Pn1w==
@@ -1099,7 +1099,7 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
-axios@^1.9.0:
+axios@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.11.0.tgz#c2ec219e35e414c025b2095e8b8280278478fdb6"
   integrity sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==
@@ -1856,10 +1856,10 @@ mobx-react-lite@^4.1.0:
   dependencies:
     use-sync-external-store "^1.4.0"
 
-mobx-toolbox@^1.4.8:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/mobx-toolbox/-/mobx-toolbox-1.4.8.tgz#13280a28b4cb137f18829601c4154c15de7d6530"
-  integrity sha512-tYkgPjngbekPuOkjDgUspPueKbTUKTtKP9T0liX+m6203tSwhK44MO0dC7enG1wHuhIYnyL33YApYjsFtyeiVQ==
+mobx-toolbox@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/mobx-toolbox/-/mobx-toolbox-1.5.1.tgz#52f74a53cbf604ea0d9ac88fa94494b471a45784"
+  integrity sha512-aPWJtf7Kkhl5BIQ8AcpVw8vKdKf88EZcGru8uIn0/DghuddgO2To0rD3KukpwI7m79Fspe0FDtOsKrU+MdpJ7w==
   dependencies:
     mobx "^6.13.3"
 

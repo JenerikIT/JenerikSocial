@@ -11,6 +11,21 @@ export interface User {
   likedPosts: string[];
 }
 
+export interface PostPropsWithId {
+  id: string;
+  title: string;
+  text: string;
+  tags: string[];
+  user: User;
+  viewsCount: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  likeCount: number;
+  imageUrl: string;
+  liked: boolean;
+}
+
 export interface PostProps {
   _id: string;
   title: string;
@@ -22,15 +37,11 @@ export interface PostProps {
   updatedAt: string;
   __v: number;
   likeCount: number;
-  posts: PostProps[];
   imageUrl: string;
-  liked: string;
+  liked: boolean;
 }
 
-export interface GetPostsResponse {
-  items: PostProps[];
-  status: string;
-}
+export interface GetPostsResponse extends PostProps { }
 
 export const postsApi = createApi({
   tagTypes: ["Posts"],
@@ -59,12 +70,12 @@ export const postsApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.items.map(({ _id }) => ({
-                type: "Posts" as const,
-                id: _id,
-              })),
-              { type: "Posts", id: "LIST" },
-            ]
+            ...result.items.map(({ _id }) => ({
+              type: "Posts" as const,
+              id: _id,
+            })),
+            { type: "Posts", id: "LIST" },
+          ]
           : [{ type: "Posts", id: "LIST" }],
     }),
     getAllLikedPosts: builder.query<PostProps, void>({
@@ -91,7 +102,7 @@ export const postsApi = createApi({
     }),
     updatePost: builder.mutation<
       PostProps,
-      { id: string; data: Partial<PostProps> }
+      { id: string; data: Partial<PostProps>; }
     >({
       query: ({ id, data }) => ({
         url: `posts/${id}`,

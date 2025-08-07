@@ -1,40 +1,42 @@
-import Post from "./Post";
-import "./PostList.scss";
-import "./Post.scss";
-import "./modal.scss";
-import { useGetAllPostsQuery } from "../../../api/posts/postsApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
-import { useMemo, memo } from "react";
+import { observer } from 'mobx-react-lite';
+import { useEffect } from "react";
+import { AsyncDataRender } from '../../../shared/ui/AsyncDataRender/AsyncDataRender';
+import { postActions } from '../../../stores/post/post-actions/post-actions';
 import CreatePost from "../CreatePost/CreatePost";
+import { Post } from "./Post";
+import "./Post.scss";
+import "./PostList.scss";
+import "./modal.scss";
 
-const PostList = memo(() => {
-  const { valueHeaderDebounce } = useSelector(
-    (state: RootState) => state.valueHeaderSearch
-  );
+export const PostList = observer(() => {
+  const {
+    getPostsAction,
+    posts: {
+      data,
+      status
+    }
+  } = postActions;
 
-  const { data, isLoading, isError } = useGetAllPostsQuery();
-  const filteredPosts = useMemo(() => {
-    if (!data?.items) return [];
-    if (!valueHeaderDebounce) return data.items;
+  useEffect(() => { getPostsAction(); }, []);
 
-    const searchTerm = valueHeaderDebounce.toLowerCase();
-    return data.items.filter((post) =>
-      post.text.toLowerCase().includes(searchTerm)
-    );
-  }, [valueHeaderDebounce, data?.items]);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading posts</div>;
   return (
-    <div className="group-posts">
-      {filteredPosts.length ? (
-        filteredPosts.map((post) => <Post key={post._id} {...post} />)
-      ) : (
-        <CreatePost close={false} />
-      )}
-    </div>
+    <>
+      <AsyncDataRender
+        status={status}
+        data={data}
+        render={() => {
+          return (
+            <div className="group-posts">
+              {data?.map((post) => {
+                return (
+                  <Post key={post._id} post={post} />
+                );
+              })}
+              <CreatePost close={false} />
+            </div>
+          );
+        }}
+      />
+    </>
   );
 });
-
-export default PostList;

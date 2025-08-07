@@ -1,11 +1,11 @@
-import "./favourite.scss";
-import Post from "../PostList/Post";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
 import { useGetAllLikedPostsQuery } from "../../../api/posts/postsApi";
+import { RootState } from "../../../store/store";
+import { Post } from "../PostList/Post";
+import "./favourite.scss";
 type Props = {};
-function Favourite({}: Props) {
+function Favourite({ }: Props) {
   const [modalPost, setModalPost] = useState(false);
   const { data: AllMyLikedPost, isLoading } = useGetAllLikedPostsQuery();
 

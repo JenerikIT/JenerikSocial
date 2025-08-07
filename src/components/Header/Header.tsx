@@ -1,9 +1,9 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import logotipSocial from "../../assets/img/logotipSocial.svg";
 import { useDispatch } from "react-redux";
-import { changeValueHeder } from "../../store/Slice/searchHeader";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { authApi, useAuthMeQuery } from "../../api/auth/authApi";
+import logotipSocial from "../../assets/img/logotipSocial.svg";
+import { changeValueHeder } from "../../store/Slice/searchHeader";
 import "./Header.scss";
 
 const Header = () => {
@@ -139,7 +139,7 @@ const Header = () => {
                   {data?.userData.fullName}
                 </div>
                 <div className="account-menu__phone">
-                  {data?.userData.phone.slice(0, 7)}....
+                  {data?.userData?.phone?.slice(0, 7)}....
                 </div>
               </div>
               <ul className="account-menu__options">

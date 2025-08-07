@@ -6,7 +6,7 @@ type Props = {
   onClickModal: (i: boolean) => void;
   tags: string[];
   text: string;
-  _id: string;
+  _id?: string;
 };
 
 function Modal({ modalPost, onClickModal, text, imgPost, tags }: Props) {

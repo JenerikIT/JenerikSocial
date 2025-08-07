@@ -11,19 +11,20 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-type UserData = {
+export type UserData = {
   email: string;
   password: string;
 };
 
-type AuthResponse = {
+export type AuthResponse = {
   _id: string;
   email: string;
   fullName: string;
   state: boolean;
   token: string;
 };
-type AuthResponseCheck = {
+
+export type AuthResponseCheck = {
   userData: {
     _id: string;
     email: string;
